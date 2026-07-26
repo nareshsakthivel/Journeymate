@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JourneyMate — AI Travel Companion</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f5f5f3;--surf:#fff;--surf2:#f9f9f7;--bdr:#e4e4e0;--txt:#1a1a18;--txt2:#6b6b65;--txt3:#9b9b94;--acc:#1a56db;--acc-bg:#eff4ff;--acc-bdr:#c3d4fc;--red:#c81e1e;--red-bg:#fdf2f2;--red-bdr:#fbd5d5;--grn:#057a55;--grn-bg:#f0fdf4;--grn-bdr:#bbf7d0;--pur:#5521b5;--pur-bg:#f5f3ff;--pur-bdr:#ddd6fe;--nav:#0a0f1e;--sky:#3b82f6;--mist:#8896a8;--plat:#c9a227;--gold:#e67e22;--teal:#0891b2;--r:8px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);font-size:13px;min-height:100vh}
+.nav{background:var(--nav);height:52px;display:flex;align-items:center;padding:0 24px;justify-content:space-between;position:sticky;top:0;z-index:999}
+.nlogo{display:flex;align-items:center;gap:9px}
+.nmark{width:30px;height:30px;background:var(--acc);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0}
+.ntxt{color:#fff;font-weight:600;font-size:15px;font-family:'Inter',sans-serif}
+.nlinks{display:flex;gap:2px}
+.nl{padding:6px 12px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;color:rgba(255,255,255,.5);border:none;background:none;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
+.nl:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nl.on{color:#60a5fa;background:rgba(59,130,246,.2)}
+.pg{display:none;min-height:calc(100vh - 52px)}
+.pg.on{display:block}
+.pad{padding:20px}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:14px;align-items:start;max-width:1060px;margin:0 auto}
+.sb{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:16px}
+.slbl{font-size:9px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px}
+.pc{border:1px solid var(--bdr);border-radius:var(--r);padding:10px;cursor:pointer;margin-bottom:5px;transition:all .15s}
+.pc:hover{border-color:var(--acc);background:var(--acc-bg)}
+.pc.sel{border:2px solid var(--acc);background:var(--acc-bg)}
+.ptop{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.pav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.pnm{font-size:12px;font-weight:500;color:var(--txt)}
+.psg{font-size:10px;color:var(--txt3);line-height:1.4}
+.db{width:100%;padding:8px 10px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--surf);color:var(--txt2);font-size:11px;cursor:pointer;text-align:left;margin-bottom:5px;transition:all .15s;font-family:'DM Sans',sans-serif}
+.db:hover{border-color:var(--red-bdr);background:var(--red-bg);color:var(--red)}
+.db.sel{border:2px solid var(--red);background:var(--red-bg);color:var(--red);font-weight:500}
+.db.gsel{border:2px solid var(--grn);background:var(--grn-bg);color:var(--grn);font-weight:500}
+.genb{width:100%;padding:11px;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity .15s;color:#fff}
+.genb:disabled{opacity:.4;cursor:not-allowed}
+.genb.blue{background:var(--acc)}
+.genb.green{background:var(--grn)}
+.main{display:flex;flex-direction:column;gap:12px;max-width:1060px;margin:0 auto}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;overflow:hidden}
+.chd{padding:11px 16px;background:var(--surf2);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px}
+.cbd{padding:16px}
+.rag{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rb{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:10px;font-size:11px}
+.ri{font-size:16px;margin-bottom:5px;display:block}
+.rl{font-weight:500;color:var(--txt);margin-bottom:2px}
+.rd{color:var(--txt3);line-height:1.4}
+.acard{background:var(--surf);border-radius:12px;overflow:hidden}
+.acard.blue{border:1px solid var(--acc-bdr)}
+.acard.green{border:1px solid var(--grn-bdr)}
+.ahd{padding:11px 16px;display:flex;align-items:center;gap:8px}
+.ahd.blue{background:var(--acc-bg);border-bottom:1px solid var(--acc-bdr)}
+.ahd.green{background:var(--grn-bg);border-bottom:1px solid var(--grn-bdr)}
+.adot{width:7px;height:7px;border-radius:50%;animation:pulse 2s infinite}
+.adot.blue{background:var(--acc)}
+.adot.green{background:var(--grn)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.albl{font-size:12px;font-weight:600}
+.albl.blue{color:var(--acc)}
+.albl.green{color:var(--grn)}
+.atag{margin-left:auto;font-size:9px;color:var(--txt3);background:var(--surf);border:1px solid var(--bdr);border-radius:4px;padding:2px 6px}
+.abd{padding:16px;min-height:130px}
+.aph{color:var(--txt3);font-size:12px;font-style:italic}
+.atxt{font-size:13px;line-height:1.8;color:var(--txt);white-space:pre-wrap}
+.cur{display:inline-block;width:2px;height:14px;background:var(--acc);margin-left:2px;vertical-align:middle;animation:blink .8s infinite}
+.cur.g{background:var(--grn)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.mrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr)}
+.mb{text-align:center;padding:11px 8px;background:var(--surf2);border-radius:var(--r);border:1px solid var(--bdr);cursor:pointer;transition:all .15s}
+.mb:hover{border-color:var(--acc);background:var(--acc-bg)}
+.mv{font-size:18px;font-weight:600;color:var(--acc);text-decoration:underline dotted;font-family:'Inter',sans-serif}
+.ml{font-size:9px;color:var(--txt3);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
+.mh{font-size:8px;color:var(--acc);margin-top:2px}
+.empty{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:50px 20px;text-align:center;color:var(--txt3)}
+.pmeta{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid}
+.pmeta.blue{background:var(--pur-bg);border-color:var(--pur-bdr)}
+.pmeta.green{background:var(--grn-bg);border-color:var(--grn-bdr)}
+.pman{font-size:12px;font-weight:500}
+.pman.blue{color:var(--pur)}
+.pman.green{color:var(--grn)}
+.pmas{font-size:10px;opacity:.7}
+.pmas.blue{color:var(--pur)}
+.pmas.green{color:var(--grn)}
+.alert{display:flex;align-items:flex-start;gap:9px;padding:10px 16px;border-bottom:1px solid}
+.alert.red{background:var(--red-bg);border-color:var(--red-bdr)}
+.alert.green{background:var(--grn-bg);border-color:var(--grn-bdr)}
+.at{font-size:12px;font-weight:600}
+.at.red{color:var(--red)}
+.at.green{color:var(--grn)}
+.as{font-size:10px;margin-top:2px;opacity:.8}
+.as.red{color:var(--red)}
+.as.green{color:var(--grn)}
+.chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:600}
+.chip.red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bdr)}
+.chip.grn{background:var(--grn-bg);color:var(--grn);border:1px solid var(--grn-bdr)}
+.spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lc{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px;max-width:1060px;margin-left:auto;margin-right:auto}
+.lcs{border-radius:var(--r);padding:10px 7px;text-align:center}
+.lcs.g{background:var(--grn-bg);border:1px solid var(--grn-bdr)}
+.lcs.r{background:var(--red-bg);border:1px solid var(--red-bdr)}
+.lci{font-size:16px;margin-bottom:4px}
+.lcn{font-size:9px;font-weight:600;margin-bottom:2px}
+.lcs.g .lcn{color:var(--grn)}
+.lcs.r .lcn{color:var(--red)}
+.lcd{font-size:8px;color:var(--txt3);line-height:1.3}
+.lcb{margin-top:5px;font-size:7px;padding:2px 6px;border-radius:3px;display:inline-block;color:#fff}
+.lcs.g .lcb{background:var(--grn)}
+.lcs.r .lcb{background:var(--red)}
+.csrow{margin-top:14px;padding-top:12px;border-top:1px solid var(--bdr)}
+.cstit{font-size:9px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px}
+.csgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.csitem{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:11px;text-align:center}
+.csicon{font-size:20px;margin-bottom:5px}
+.cslbl{font-size:10px;font-weight:600;color:var(--txt);margin-bottom:2px}
+.csval{font-size:10px;color:var(--acc);font-weight:500}
+.csconv{font-size:9px;color:var(--txt3);margin-top:2px}
+.dtabs{background:var(--surf);border-bottom:1px solid var(--bdr);padding:0 24px;display:flex;position:sticky;top:52px;z-index:90;overflow-x:auto}
+.dtab{padding:13px 16px;font-size:12px;font-weight:500;color:var(--txt3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.dtab:hover{color:var(--txt2)}
+.dtab.on{color:var(--acc);border-bottom-color:var(--acc)}
+.dsec{display:none;max-width:920px;margin:0 auto;padding:24px}
+.dsec.on{display:block}
+.dsec-title{font-size:19px;font-weight:600;color:var(--txt);margin-bottom:5px;font-family:'Inter',sans-serif}
+.dsec-sub{font-size:12px;color:var(--txt2);margin-bottom:20px;line-height:1.6}
+.dcard{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.dchd{padding:11px 16px;background:var(--surf2);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:var(--txt)}
+.dbadge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--acc-bg);color:var(--acc);border:1px solid var(--acc-bdr)}
+.dcbd{padding:16px}
+.dtbl{width:100%;border-collapse:collapse;font-size:11px}
+.dtbl th{text-align:left;padding:7px 10px;background:var(--surf2);color:var(--txt3);font-weight:600;font-size:9px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bdr)}
+.dtbl td{padding:9px 10px;border-bottom:1px solid var(--bdr);color:var(--txt2);vertical-align:top;line-height:1.5}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl td:first-child{font-weight:500;color:var(--txt)}
+.dform{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;margin:10px 0;font-size:11px;color:var(--txt2);line-height:1.8}
+.dform strong{color:var(--acc)}
+.dhl{border-radius:var(--r);padding:12px;margin:10px 0;font-size:11px;line-height:1.7}
+.dhl.blue{background:var(--acc-bg);border:1px solid var(--acc-bdr);color:var(--acc)}
+.dhl.green{background:var(--grn-bg);border:1px solid var(--grn-bdr);color:var(--grn)}
+.pstep{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.pnum{width:26px;height:26px;border-radius:50%;background:var(--acc);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.ptitle{font-size:12px;font-weight:600;color:var(--txt);margin-bottom:2px}
+.pdetail{font-size:11px;color:var(--txt2);line-height:1.5}
+.parrow{text-align:center;color:var(--txt3);margin:-4px 0;font-size:16px}
+.nbar{height:7px;background:var(--bdr);border-radius:4px;overflow:hidden;margin:4px 0}
+.nfill{height:100%;border-radius:4px}
+.nrow{display:grid;grid-template-columns:170px 1fr 65px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr)}
+.nrow:last-child{border-bottom:none}
+.nlbl{font-size:11px;font-weight:500;color:var(--txt)}
+.nval{font-size:12px;font-weight:600;text-align:right}
+.pers-wrap{background:var(--nav);min-height:calc(100vh - 52px);padding:32px 24px 60px}
+.pers-inner{max-width:1060px;margin:0 auto}
+.peyebrow{font-family:'DM Mono',monospace;font-size:10px;color:var(--sky);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.ptitle2{font-size:34px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px;font-family:'Inter',sans-serif;letter-spacing:-.5px}
+.ptitle2 em{font-style:italic;color:var(--sky)}
+.psub{font-size:13px;color:var(--mist);max-width:520px;line-height:1.7;margin-bottom:22px}
+.spills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.spill{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid}
+.sp-all{background:rgba(59,130,246,.15);color:var(--sky);border-color:rgba(59,130,246,.3)}
+.sp-p{background:rgba(201,162,39,.12);color:var(--plat);border-color:rgba(201,162,39,.3)}
+.sp-g{background:rgba(230,126,34,.12);color:var(--gold);border-color:rgba(230,126,34,.3)}
+.sp-b{background:rgba(8,145,178,.12);color:var(--teal);border-color:rgba(8,145,178,.3)}
+.spill.sp-on{filter:brightness(1.3)}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pcard{background:#0f1d3a;border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;transition:transform .2s,border-color .2s}
+.pcard:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.18)}
+.pstripe{height:4px}
+.stripe-p{background:linear-gradient(90deg,#c9a227,#f0d060,#c9a227)}
+.stripe-g{background:linear-gradient(90deg,#e67e22,#f5a623,#e67e22)}
+.stripe-b{background:linear-gradient(90deg,#0891b2,#06b6d4,#0891b2)}
+.pctop{padding:16px 16px 0;display:flex;align-items:flex-start;justify-content:space-between}
+.pcav{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;font-family:'Inter',sans-serif}
+.av-p{background:radial-gradient(135deg,#fdf9ec,#f5e6a3);color:#92700a;box-shadow:0 0 0 3px rgba(201,162,39,.3)}
+.av-g{background:radial-gradient(135deg,#fef5ec,#fdd5a8);color:#994d0a;box-shadow:0 0 0 3px rgba(230,126,34,.3)}
+.av-b{background:radial-gradient(135deg,#ecfeff,#a5f3fc);color:#0e6377;box-shadow:0 0 0 3px rgba(8,145,178,.3)}
+.pcbadge{font-family:'DM Mono',monospace;font-size:8px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:3px 7px;border-radius:4px}
+.pb-p{background:rgba(201,162,39,.15);color:var(--plat);border:1px solid rgba(201,162,39,.25)}
+.pb-g{background:rgba(230,126,34,.15);color:var(--gold);border:1px solid rgba(230,126,34,.25)}
+.pb-b{background:rgba(8,145,178,.15);color:var(--teal);border:1px solid rgba(8,145,178,.25)}
+.pcid{padding:12px 16px 0}
+.pcname{font-size:18px;font-weight:600;color:#fff;margin-bottom:3px;font-family:'Inter',sans-serif}
+.pcarch{font-size:11px;color:var(--mist);margin-bottom:10px}
+.pcquote{font-size:11px;font-style:italic;color:rgba(255,255,255,.6);line-height:1.6;padding:8px 10px;border-left:2px solid;border-radius:0 5px 5px 0;background:rgba(255,255,255,.04);margin-bottom:11px}
+.qp{border-color:var(--plat)}
+.qg{border-color:var(--gold)}
+.qb{border-color:var(--teal)}
+.pcstats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.pcstat{padding:9px 10px;text-align:center;border-right:1px solid rgba(255,255,255,.06)}
+.pcstat:last-child{border-right:none}
+.pcsv{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:#fff;margin-bottom:2px}
+.pcsl{font-size:8px;color:var(--mist);text-transform:uppercase;letter-spacing:.5px}
+.pcfields{padding:12px 16px}
+.pcfr{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.pcfr:last-child{border-bottom:none}
+.pcfi{font-size:12px;flex-shrink:0;margin-top:1px;width:16px;text-align:center}
+.pcfl{font-size:9px;color:var(--mist);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.pcfv{font-size:11px;color:rgba(255,255,255,.85);line-height:1.4}
+.pcfs{font-family:'DM Mono',monospace;font-size:8px;color:var(--sky);margin-top:2px;opacity:.7}
+.pcbot{padding:0 16px 16px}
+.jtbd{border-radius:var(--r);padding:10px}
+.jtbd-p{background:rgba(201,162,39,.08);border:1px solid rgba(201,162,39,.15)}
+.jtbd-g{background:rgba(230,126,34,.08);border:1px solid rgba(230,126,34,.15)}
+.jtbd-b{background:rgba(8,145,178,.08);border:1px solid rgba(8,145,178,.15)}
+.jtbdl{font-size:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.jtbd-p .jtbdl{color:var(--plat)}
+.jtbd-g .jtbdl{color:var(--gold)}
+.jtbd-b .jtbdl{color:var(--teal)}
+.jtbdt{font-size:11px;color:rgba(255,255,255,.75);line-height:1.6}
+.pcltv{padding:10px 16px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px}
+.ltvl{font-size:9px;color:var(--mist);text-transform:uppercase;letter-spacing:.4px;flex-shrink:0}
+.ltvbar{flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.ltvfill{height:100%;border-radius:2px}
+.lf-p{background:linear-gradient(90deg,var(--plat),#f0d060)}
+.lf-g{background:linear-gradient(90deg,var(--gold),#f5a623)}
+.lf-b{background:linear-gradient(90deg,var(--teal),#06b6d4)}
+.ltvval{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;flex-shrink:0}
+.lv-p{color:var(--plat)}
+.lv-g{color:var(--gold)}
+.lv-b{color:var(--teal)}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.pgrid{grid-template-columns:1fr}.lc{grid-template-columns:repeat(3,1fr)}}
+
+/* ===RAG PAGE===*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f3;--surf:#fff;--surf2:#f9f9f7;--bdr:#e4e4e0;
+  --txt:#1a1a18;--txt2:#6b6b65;--txt3:#9b9b94;
+  --acc:#1a56db;--acc-bg:#eff4ff;--acc-bdr:#c3d4fc;
+  --grn:#057a55;--grn-bg:#f0fdf4;--grn-bdr:#bbf7d0;
+  --pur:#5521b5;--pur-bg:#f5f3ff;--pur-bdr:#ddd6fe;
+  --org:#92400e;--org-bg:#fffbeb;--org-bdr:#fde68a;
+  --red:#c81e1e;--red-bg:#fdf2f2;--red-bdr:#fbd5d5;
+  --navy:#0a0f1e;--sky:#3b82f6;--mist:#94a3b8;
+  --r:8px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:#fff;min-height:100vh}
+
+/* NAV */
+.nav{background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.08);height:52px;display:flex;align-items:center;padding:0 28px;justify-content:space-between;position:sticky;top:0;z-index:99;backdrop-filter:blur(10px)}
+.nlogo{display:flex;align-items:center;gap:10px}
+.nmark{width:30px;height:30px;background:var(--acc);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+.ntxt{color:#fff;font-weight:600;font-size:15px;font-family:'Inter',sans-serif}
+.nbadge{background:rgba(139,92,246,.2);color:#a78bfa;border:1px solid rgba(139,92,246,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:500}
+.back-btn{color:var(--mist);font-size:12px;text-decoration:none;border:1px solid rgba(255,255,255,.12);padding:5px 12px;border-radius:6px;transition:all .15s}
+.back-btn:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+
+/* HERO */
+.hero{padding:48px 32px 40px;max-width:1060px;margin:0 auto}
+.eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:var(--sky);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.hero-title{font-family:'Inter',sans-serif;font-size:38px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px;letter-spacing:-.5px}
+.hero-title span{color:var(--sky)}
+.hero-sub{font-size:14px;color:var(--mist);max-width:580px;line-height:1.7;margin-bottom:28px}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid}
+.chip-blue{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.3)}
+.chip-green{background:rgba(5,122,85,.15);color:#34d399;border-color:rgba(5,122,85,.3)}
+.chip-purple{background:rgba(85,33,181,.2);color:#a78bfa;border-color:rgba(139,92,246,.3)}
+.chip-orange{background:rgba(146,64,14,.2);color:#fbbf24;border-color:rgba(251,191,36,.3)}
+
+/* CONTENT */
+.content{max-width:1060px;margin:0 auto;padding:0 32px 60px}
+
+/* SECTION */
+.sec{margin-bottom:40px}
+.sec-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--sky);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.sec-title{font-family:'Inter',sans-serif;font-size:22px;font-weight:600;color:#fff;margin-bottom:6px}
+.sec-sub{font-size:13px;color:var(--mist);line-height:1.7;margin-bottom:20px;max-width:640px}
+
+/* PIPELINE */
+.pipeline{display:flex;flex-direction:column;gap:0}
+.pipe-row{display:flex;align-items:stretch;gap:0}
+.pipe-node{flex:1;border-radius:12px;padding:16px 18px;position:relative}
+.pipe-arrow-down{display:flex;justify-content:center;align-items:center;height:28px;color:rgba(255,255,255,.3);font-size:18px}
+.pipe-arrow-right{display:flex;align-items:center;justify-content:center;width:28px;color:rgba(255,255,255,.3);font-size:14px;flex-shrink:0}
+.node-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-bottom:8px;flex-shrink:0}
+.node-icon{font-size:22px;margin-bottom:8px}
+.node-title{font-size:12px;font-weight:600;margin-bottom:4px}
+.node-detail{font-size:11px;line-height:1.5;opacity:.8}
+.node-tag{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:4px;margin-top:6px;letter-spacing:.5px;text-transform:uppercase}
+
+/* SOURCE NODES */
+.src-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+.src-node{border-radius:10px;padding:14px 16px}
+.src-pnr{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25)}
+.src-inv{background:rgba(5,122,85,.12);border:1px solid rgba(5,122,85,.25)}
+.src-pol{background:rgba(85,33,181,.15);border:1px solid rgba(139,92,246,.25)}
+.src-icon{font-size:20px;margin-bottom:7px}
+.src-title{font-size:12px;font-weight:600;margin-bottom:4px}
+.src-title.blue{color:#60a5fa}
+.src-title.green{color:#34d399}
+.src-title.purple{color:#a78bfa}
+.src-items{font-size:10px;color:rgba(255,255,255,.6);line-height:1.6}
+.src-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:4px;margin-top:6px;display:inline-block}
+.badge-blue{background:rgba(59,130,246,.2);color:#60a5fa}
+.badge-green{background:rgba(5,122,85,.2);color:#34d399}
+.badge-purple{background:rgba(139,92,246,.2);color:#a78bfa}
+
+/* LANGFLOW BOX */
+.langflow-box{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:12px;padding:20px 22px;margin-bottom:10px}
+.lf-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.lf-logo{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.25);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#fbbf24;font-family:'DM Mono',monospace}
+.lf-title{font-size:14px;font-weight:600;color:#fbbf24}
+.lf-sub{font-size:11px;color:rgba(255,255,255,.6)}
+.lf-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.lf-step{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 10px;text-align:center}
+.lf-step-num{font-size:18px;font-weight:700;color:rgba(251,191,36,.6);font-family:'Inter',sans-serif;margin-bottom:4px}
+.lf-step-name{font-size:10px;font-weight:600;color:#fff;margin-bottom:3px}
+.lf-step-detail{font-size:9px;color:rgba(255,255,255,.5);line-height:1.4}
+.lf-arrow{display:flex;align-items:center;justify-content:center;color:rgba(251,191,36,.4);font-size:14px}
+
+/* VECTOR DB */
+.vdb-box{background:rgba(85,33,181,.1);border:1px solid rgba(139,92,246,.25);border-radius:12px;padding:18px 20px;margin-bottom:10px}
+.vdb-title{font-size:13px;font-weight:600;color:#a78bfa;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.vdb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.vdb-item{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:10px 12px}
+.vdb-item-title{font-size:10px;font-weight:600;color:#a78bfa;margin-bottom:4px}
+.vdb-item-detail{font-size:10px;color:rgba(255,255,255,.55);line-height:1.5}
+
+/* LLM ROUTING */
+.llm-box{background:rgba(5,122,85,.08);border:1px solid rgba(5,122,85,.25);border-radius:12px;padding:18px 20px;margin-bottom:10px}
+.llm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.llm-card{border-radius:8px;padding:14px 16px}
+.llm-haiku{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2)}
+.llm-sonnet{background:rgba(5,122,85,.1);border:1px solid rgba(5,122,85,.2)}
+.llm-name{font-size:12px;font-weight:600;margin-bottom:4px}
+.llm-haiku .llm-name{color:#60a5fa}
+.llm-sonnet .llm-name{color:#34d399}
+.llm-detail{font-size:10px;color:rgba(255,255,255,.6);line-height:1.5;margin-bottom:6px}
+.llm-use{font-size:9px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-block}
+.llm-haiku .llm-use{background:rgba(59,130,246,.2);color:#60a5fa}
+.llm-sonnet .llm-use{background:rgba(5,122,85,.2);color:#34d399}
+
+/* OUTPUT */
+.out-box{background:rgba(5,122,85,.08);border:1px solid rgba(5,122,85,.25);border-radius:12px;padding:18px 20px}
+.out-msg{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:14px 16px;font-size:12px;color:rgba(255,255,255,.8);line-height:1.7;font-style:italic;margin-top:10px}
+
+/* CARDS GRID */
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.info-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px}
+.info-card-icon{font-size:22px;margin-bottom:8px}
+.info-card-title{font-size:12px;font-weight:600;color:#fff;margin-bottom:5px}
+.info-card-detail{font-size:11px;color:rgba(255,255,255,.55);line-height:1.6}
+
+/* TECH STACK */
+.tech-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tech-pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:6px 12px;font-size:11px;font-weight:500;color:rgba(255,255,255,.8);font-family:'DM Mono',monospace}
+.tech-pill.highlight{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.25);color:#fbbf24}
+
+/* FLOW DIAGRAM */
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:12px 0}
+.flow-box{border-radius:6px;padding:6px 12px;font-size:11px;font-weight:500}
+.flow-arrow{color:rgba(255,255,255,.3);font-size:12px}
+.fb-source{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+.fb-process{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
+.fb-store{background:rgba(139,92,246,.15);color:#a78bfa;border:1px solid rgba(139,92,246,.25)}
+.fb-retrieve{background:rgba(5,122,85,.12);color:#34d399;border:1px solid rgba(5,122,85,.25)}
+.fb-generate{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.fb-deliver{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.12)}
+
+footer{text-align:center;padding:32px;font-size:11px;color:rgba(255,255,255,.2);font-family:'DM Mono',monospace}
+@media(max-width:768px){.src-grid{grid-template-columns:1fr}.lf-steps{grid-template-columns:1fr 1fr}.llm-grid{grid-template-columns:1fr}.cards-grid{grid-template-columns:1fr}.hero-title{font-size:26px}.content,.hero{padding-left:20px;padding-right:20px}}
+
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nlogo">
+    <div class="nmark">✈</div>
+    <div class="ntxt">JourneyMate</div>
+  </div>
+  <div class="nlinks">
+    <button class="nl on" id="nl-p" onclick="goto('p')">✦ Prototype</button>
+    <button class="nl" id="nl-c" onclick="goto('c')">🌍 Trip Planning</button>
+    <button class="nl" id="nl-r" onclick="goto('r')">👤 Personas</button>
+    <button class="nl" id="nl-d" onclick="goto('d')">📊 Data</button>
+    <button class="nl" id="nl-rag" onclick="goto('rag')">⚙ RAG Architecture</button>
+  </div>
+</nav>
+
+<!-- PROTOTYPE -->
+<div class="pg on pad" id="pg-p">
+  <div class="grid">
+    <div class="sb">
+      <div><div class="slbl">Traveller profile</div><div id="pl"></div></div>
+      <div><div class="slbl">Disruption scenario</div><div id="dl"></div></div>
+      <button class="genb blue" id="gb" onclick="gen()" disabled><span id="gc">✦ Generate recovery plan</span></button>
+    </div>
+    <div id="mc" class="main">
+      <div class="empty"><div style="font-size:32px;margin-bottom:10px">✈</div><div style="font-size:14px;font-weight:500;color:var(--txt2);margin-bottom:5px">Select a traveller and disruption</div><div style="font-size:11px">JourneyMate generates a personalised AI recovery plan</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPANION -->
+<div class="pg pad" id="pg-c">
+  <div class="lc">
+    <div class="lcs g"><div class="lci">💡</div><div class="lcn">Inspire</div><div class="lcd">Destination ideas</div><div class="lcb">Companion</div></div>
+    <div class="lcs g"><div class="lci">🎫</div><div class="lcn">Book</div><div class="lcd">Cross-sell at checkout</div><div class="lcb">Companion</div></div>
+    <div class="lcs g"><div class="lci">🧳</div><div class="lcn">Pre-trip</div><div class="lcd">Enrich the journey</div><div class="lcb">Companion</div></div>
+    <div class="lcs r"><div class="lci">✈</div><div class="lcn">Fly</div><div class="lcd">Recovery Mode only</div><div class="lcb">Recovery</div></div>
+    <div class="lcs g"><div class="lci">🔄</div><div class="lcn">Post-trip</div><div class="lcd">Re-engage next journey</div><div class="lcb">Companion</div></div>
+  </div>
+  <div class="grid">
+    <div class="sb">
+      <div><div class="slbl">Traveller profile</div><div id="cpl"></div></div>
+      <div><div class="slbl">Journey phase</div><div id="chl"></div></div>
+      <button class="genb green" id="cgb" onclick="cgen()"><span id="cgc">🌍 Generate companion plan</span></button>
+    </div>
+    <div id="cmc" class="main">
+      <div class="empty"><div style="font-size:32px;margin-bottom:10px">🌍</div><div style="font-size:14px;font-weight:500;color:var(--txt2);margin-bottom:5px">Select a traveller and journey phase</div><div style="font-size:11px">JourneyMate generates a personalised companion plan</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PERSONAS -->
+<div class="pg" id="pg-r">
+<div class="pers-wrap">
+<div class="pers-inner">
+  <div class="peyebrow">AI-driven segmentation · K-means clustering · PNR + FFP data</div>
+  <h1 class="ptitle2">Three travellers.<br><em>Three completely different needs.</em></h1>
+  <p class="psub">JourneyMate segments passengers before generating a single word. Each profile is derived from PNR booking history, loyalty tier data, and past ancillary behaviour.</p>
+  <div class="spills">
+    <div class="spill sp-all sp-on" onclick="filterP('all',this)">✦ All segments</div>
+    <div class="spill sp-p" onclick="filterP('p',this)">◆ Platinum</div>
+    <div class="spill sp-g" onclick="filterP('g',this)">◆ Gold — Family</div>
+    <div class="spill sp-b" onclick="filterP('b',this)">◆ Blue — Budget</div>
+  </div>
+  <div class="pgrid" id="pgrid">
+    <div class="pcard" data-seg="p">
+      <div class="pstripe stripe-p"></div>
+      <div class="pctop"><div class="pcav av-p">VN</div><div class="pcbadge pb-p">Platinum</div></div>
+      <div class="pcid"><div class="pcname">Vaishnavi Nair</div><div class="pcarch">Solo business · Chennai · 34 yrs</div><div class="pcquote qp">"Get me to my meeting or recover my day fast — don't make me queue."</div></div>
+      <div class="pcstats"><div class="pcstat"><div class="pcsv">36</div><div class="pcsl">Segments/yr</div></div><div class="pcstat"><div class="pcsv">5</div><div class="pcsl">Disruptions/2yr</div></div><div class="pcstat"><div class="pcsv">87%</div><div class="pcsl">Business class</div></div></div>
+      <div class="pcfields">
+        <div class="pcfr"><div class="pcfi">💺</div><div><div class="pcfl">Seat preference</div><div class="pcfv">Aisle · rows 1-5 · bulkhead avoided</div><div class="pcfs">SSR field in PNR — 34/36 bookings</div></div></div>
+        <div class="pcfr"><div class="pcfi">🛋</div><div><div class="pcfl">Lounge behaviour</div><div class="pcfv">Premium lounge in 4 of 5 disruptions. Avoids crowded food courts.</div><div class="pcfs">Lounge access transaction log</div></div></div>
+        <div class="pcfr"><div class="pcfi">🏨</div><div><div class="pcfl">Hotel preference</div><div class="pcfv">4-star · near airport · quiet · early check-in 3x in 12 months</div><div class="pcfs">Past hotel ancillary purchases</div></div></div>
+        <div class="pcfr"><div class="pcfi">⚡</div><div><div class="pcfl">Primary anxiety</div><div class="pcfv">Missing connection · no info · having to queue or call</div><div class="pcfs">Inferred from segment cluster</div></div></div>
+      </div>
+      <div class="pcbot"><div class="jtbd jtbd-p"><div class="jtbdl">Job to be done</div><div class="jtbdt">When my flight is disrupted, tell me what has been arranged — not what I need to do. One message. Before I reach the gate.</div></div></div>
+      <div class="pcltv"><div class="ltvl">Est. LTV</div><div class="ltvbar"><div class="ltvfill lf-p" style="width:90%"></div></div><div class="ltvval lv-p">Rs 8-12L</div></div>
+    </div>
+    <div class="pcard" data-seg="g">
+      <div class="pstripe stripe-g"></div>
+      <div class="pctop"><div class="pcav av-g">RF</div><div class="pcbadge pb-g">Gold</div></div>
+      <div class="pcid"><div class="pcname">Ramesh & family</div><div class="pcarch">Family of 4 · Delhi · 42 yrs</div><div class="pcquote qg">"Keep my children comfortable and tell me what we're entitled to."</div></div>
+      <div class="pcstats"><div class="pcstat"><div class="pcsv">4</div><div class="pcsl">Segments/yr</div></div><div class="pcstat"><div class="pcsv">4 pax</div><div class="pcsl">Party size</div></div><div class="pcstat"><div class="pcsv">100%</div><div class="pcsl">Economy</div></div></div>
+      <div class="pcfields">
+        <div class="pcfr"><div class="pcfi">💺</div><div><div class="pcfl">Seat preference</div><div class="pcfv">4 together · window for children · exit row avoided</div><div class="pcfs">Seat map history · child pax flag</div></div></div>
+        <div class="pcfr"><div class="pcfi">👶</div><div><div class="pcfl">Passenger manifest</div><div class="pcfv">2 adults + 2 children under 12. CHML meal code active.</div><div class="pcfs">PNR passenger manifest · SSR</div></div></div>
+        <div class="pcfr"><div class="pcfi">🏨</div><div><div class="pcfl">Hotel preference</div><div class="pcfv">Family room · 3-star mid-tier · pool access preferred</div><div class="pcfs">Ancillary hotel purchases</div></div></div>
+        <div class="pcfr"><div class="pcfi">⚡</div><div><div class="pcfl">Primary anxiety</div><div class="pcfv">Children's comfort · family seated together · entitlement clarity</div><div class="pcfs">Inferred from family segment</div></div></div>
+      </div>
+      <div class="pcbot"><div class="jtbd jtbd-g"><div class="jtbdl">Job to be done</div><div class="jtbdt">Settle the children first — lounge with play area, family room, seats together on the next flight. Tell me clearly what we're owed.</div></div></div>
+      <div class="pcltv"><div class="ltvl">Est. LTV</div><div class="ltvbar"><div class="ltvfill lf-g" style="width:55%"></div></div><div class="ltvval lv-g">Rs 4-6L</div></div>
+    </div>
+    <div class="pcard" data-seg="b">
+      <div class="pstripe stripe-b"></div>
+      <div class="pctop"><div class="pcav av-b">AB</div><div class="pcbadge pb-b">Blue</div></div>
+      <div class="pcid"><div class="pcname">Arjun Backpacker</div><div class="pcarch">Solo leisure · Bengaluru · 26 yrs</div><div class="pcquote qb">"Just tell me what I'm owed in plain language."</div></div>
+      <div class="pcstats"><div class="pcstat"><div class="pcsv">3</div><div class="pcsl">Segments/yr</div></div><div class="pcstat"><div class="pcsv">Rs 0</div><div class="pcsl">Ancillary spend</div></div><div class="pcstat"><div class="pcsv">100%</div><div class="pcsl">Economy L</div></div></div>
+      <div class="pcfields">
+        <div class="pcfr"><div class="pcfi">💺</div><div><div class="pcfl">Seat preference</div><div class="pcfv">No preference · takes assigned seat · zero paid selections</div><div class="pcfs">Seat map history — 0 paid in 3 bookings</div></div></div>
+        <div class="pcfr"><div class="pcfi">🎒</div><div><div class="pcfl">Baggage</div><div class="pcfv">Hand baggage only on all 3 trips. No checked bag purchased.</div><div class="pcfs">Baggage ancillary log · SSR</div></div></div>
+        <div class="pcfr"><div class="pcfi">🏨</div><div><div class="pcfl">Hotel at destination</div><div class="pcfv">No hotel detected in partner cross-reference. Likely hostel/Airbnb.</div><div class="pcfs">Partner cross-reference — null result</div></div></div>
+        <div class="pcfr"><div class="pcfi">⚡</div><div><div class="pcfl">Primary anxiety</div><div class="pcfv">Not knowing entitlements · missing compensation · downstream plans</div><div class="pcfs">Inferred from zero-ancillary cluster</div></div></div>
+      </div>
+      <div class="pcbot"><div class="jtbd jtbd-b"><div class="jtbdl">Job to be done</div><div class="jtbdt">Tell me exactly what I'm owed in plain language. Fast enough that I can adjust my Singapore plans before it's too late.</div></div></div>
+      <div class="pcltv"><div class="ltvl">Est. LTV</div><div class="ltvbar"><div class="ltvfill lf-b" style="width:12%"></div></div><div class="ltvval lv-b">Rs 60-80K</div></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- DATA -->
+<div class="pg" id="pg-d">
+  <div style="background:var(--nav);padding:32px 24px 40px;border-bottom:1px solid #1e293b">
+    <div style="font-size:24px;font-weight:700;color:#fff;margin-bottom:7px;font-family:'Inter',sans-serif">Backend Data & Methodology</div>
+    <div style="font-size:13px;color:#94a3b8;max-width:560px;line-height:1.7">Every number in JourneyMate is sourced and traceable. This page documents the RAG architecture, cost model, ancillary revenue methodology, and NPS model.</div>
+  </div>
+  <div class="dtabs">
+    <button class="dtab on" onclick="showDTab('arch',this)">RAG Architecture</button>
+    <button class="dtab" onclick="showDTab('costs',this)">Cost Model</button>
+    <button class="dtab" onclick="showDTab('ancillary',this)">Ancillary Revenue</button>
+    <button class="dtab" onclick="showDTab('nps',this)">NPS Methodology</button>
+    <button class="dtab" onclick="showDTab('sources',this)">Data Sources</button>
+  </div>
+  <div class="dsec on" id="ds-arch">
+    <div class="dsec-title">Production RAG Architecture</div>
+    <div class="dsec-sub">In the prototype, context is pre-defined. In production, JourneyMate retrieves live data from three sources at the moment of disruption and passes it to the LLM as context.</div>
+    <div class="dcard"><div class="dchd">RAG Pipeline — step by step</div><div class="dcbd">
+      <div class="pstep"><div class="pnum">1</div><div><div class="ptitle">Disruption trigger</div><div class="pdetail">OAG / FlightAware API detects delay 90+ min, cancellation, or diversion. Event fires with flight number, reason code, new ETA, and affected PNR list.</div></div></div>
+      <div class="parrow">↓</div>
+      <div class="pstep"><div class="pnum">2</div><div><div class="ptitle">Profile retrieval — Source 1</div><div class="pdetail">PNR system API (Navitaire / Altea) retrieves traveller profile: tier, seat preference, meal choice, past ancillary history, contact channel. Read-only, sub-200ms.</div></div></div>
+      <div class="parrow">↓</div>
+      <div class="pstep"><div class="pnum">3</div><div><div class="ptitle">Inventory retrieval — Source 2</div><div class="pdetail">Real-time partner APIs: lounge availability (Priority Pass), hotel inventory (Amadeus), transfer availability, next flight (GDS feed). All retrieved simultaneously.</div></div></div>
+      <div class="parrow">↓</div>
+      <div class="pstep"><div class="pnum">4</div><div><div class="ptitle">Policy retrieval — Source 3 (RAG)</div><div class="pdetail">Vector similarity search in Pinecone DB against embedded DGCA policy corpus and airline entitlement rules. Returns top-k relevant chunks. Auto-updated when DGCA publishes new circulars.</div></div></div>
+      <div class="parrow">↓</div>
+      <div class="pstep"><div class="pnum">5</div><div><div class="ptitle">Generate and deliver</div><div class="pdetail">Profile + inventory + policy assembled into prompt. Claude Haiku for simple delays, Sonnet for complex cancellations. Delivered via WhatsApp/push/SMS in under 8 seconds from trigger.</div></div></div>
+      <div class="parrow">↓</div>
+      <div class="pstep"><div class="pnum">6</div><div><div class="ptitle">Feedback loop</div><div class="pdetail">Traveller accepts or dismisses each recommendation. Logged to segmentation model. JourneyMate gets smarter with every disruption handled.</div></div></div>
+    </div></div>
+    <div class="dcard"><div class="dchd">Technology choices — justified</div><div class="dcbd">
+      <table class="dtbl"><tr><th>Component</th><th>Choice</th><th>Why</th><th>Alternative</th></tr>
+      <tr><td>Vector DB</td><td>Pinecone</td><td>Managed, low-latency, scales to millions of vectors with no ops overhead.</td><td>Weaviate (open source)</td></tr>
+      <tr><td>LLM — simple delays</td><td>Claude Haiku 4.5</td><td>Sub-second, ~$0.001/call. Short generation at scale.</td><td>Gemini Flash</td></tr>
+      <tr><td>LLM — complex</td><td>Claude Sonnet 4.6</td><td>Strong reasoning for multi-constraint recovery plans — family + diversion + overnight.</td><td>GPT-4o-mini</td></tr>
+      <tr><td>Flight data</td><td>OAG API</td><td>Industry standard for live flight status. Used by 90% of airlines.</td><td>FlightAware, Cirium</td></tr>
+      <tr><td>Delivery</td><td>WhatsApp Business API</td><td>95%+ open rate vs 20% for email. Dominant channel in India.</td><td>SMS, push notification</td></tr></table>
+    </div></div>
+    <div class="dhl blue"><strong>Why RAG and not fine-tuning?</strong> DGCA policy changes frequently. Fine-tuning bakes knowledge at training time — it goes stale. RAG retrieves at inference time — always current. For policy-critical content like compensation entitlements, retrieval-grounded generation is non-negotiable. The LLM's job is language. The data pipeline's job is facts.</div>
+  </div>
+  <div class="dsec" id="ds-costs">
+    <div class="dsec-title">Operational Cost Model</div>
+    <div class="dsec-sub">The primary value of JourneyMate is operational cost reduction — not ancillary revenue. Every disruption today requires costly human agent intervention that JourneyMate automates.</div>
+    <div class="dcard"><div class="dchd">Cost per disrupted passenger — current state<span class="dbadge">CAPA India 2023</span></div><div class="dcbd">
+      <table class="dtbl"><tr><th>Cost item</th><th>Basis</th><th>Per passenger</th></tr>
+      <tr><td>Call centre agent</td><td>Delay 18 min, cancellation 24 min, diversion 30 min. Fully loaded Rs 80/min.</td><td>Rs 1,440 - Rs 2,400</td></tr>
+      <tr><td>Manual rebooking staff</td><td>Avg 8-12 min at Rs 60/min (ops desk)</td><td>Rs 480 - Rs 720</td></tr>
+      <tr><td>Hotel block booking waste</td><td>35% unused rooms per disruption — cost per actual passenger</td><td>Rs 400 - Rs 800</td></tr>
+      <tr><td>Compensation admin</td><td>Form filing, approval, reconciliation — 3 min at Rs 80/min</td><td>Rs 240</td></tr>
+      <tr><td>Follow-up calls</td><td>Avg 2 follow-up calls per disrupted pax, 5 min each</td><td>Rs 800</td></tr></table>
+      <div class="dform"><strong>Net saving per passenger:</strong> Rs 2,000 - Rs 3,500 depending on disruption type<br><strong>At IndiGo scale</strong> (1.5M disrupted pax/yr x 60% automation): <strong>Rs 180+ crore annual cost saving</strong><br><strong>JourneyMate SaaS fee:</strong> Rs 15/disrupted passenger — airline saves Rs 10-13 for every Rs 1 they pay</div>
+    </div></div>
+    <div class="dhl green"><strong>This is the contract-winning number.</strong> An airline CFO will sign for operational cost savings far faster than ancillary revenue upside. The ancillary is the bonus. Cost reduction pays for JourneyMate.</div>
+  </div>
+  <div class="dsec" id="ds-ancillary">
+    <div class="dsec-title">Ancillary Revenue Model</div>
+    <div class="dsec-sub">Ancillary is the secondary value driver. All figures are conversion-adjusted. Excluded: complimentary entitlements, travel insurance (pre-trip only), and anything not genuinely purchasable in the disruption moment.</div>
+    <div class="dcard"><div class="dchd">Conversion rates by item and segment<span class="dbadge">IATA 2023</span></div><div class="dcbd">
+      <table class="dtbl"><tr><th>Item</th><th>Eligible?</th><th>Platinum</th><th>Gold</th><th>Blue</th></tr>
+      <tr><td>Lounge upgrade (economy to premium)</td><td>Yes — paid upsell</td><td>25%</td><td>15%</td><td>5%</td></tr>
+      <tr><td>Complimentary lounge access</td><td>No — entitled benefit, not revenue</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>F&B above mandatory voucher</td><td>Yes — incremental</td><td>30%</td><td>25%</td><td>15%</td></tr>
+      <tr><td>Seat upgrade on rebooked flight</td><td>Yes — clear upsell</td><td>20%</td><td>12%</td><td>8%</td></tr>
+      <tr><td>Hotel upgrade above mandatory</td><td>Yes — cancellations only</td><td>25%</td><td>18%</td><td>5%</td></tr>
+      <tr><td>Airport transfer rebooking</td><td>Yes — practical need</td><td>40%</td><td>35%</td><td>20%</td></tr>
+      <tr><td>Travel insurance</td><td>No — pre-trip purchase only, cannot buy mid-journey</td><td>—</td><td>—</td><td>—</td></tr></table>
+      <div class="dform"><strong>Honest note:</strong> Metric values shown in the prototype represent airline-side ancillary opportunity. JourneyMate's own revenue is the SaaS licence (Rs 15/pax) plus commission (8-12% of ancillary generated). The headline business case is always operational cost saving — that closes the deal.</div>
+    </div></div>
+  </div>
+  <div class="dsec" id="ds-nps">
+    <div class="dsec-title">NPS Methodology</div>
+    <div class="dsec-sub">NPS moves are derived from published disruption research — not estimated. Calibrated to disruption type and handling quality.</div>
+    <div class="dcard"><div class="dchd">NPS by disruption type<span class="dbadge">Bain 2022 / IATA 2023</span></div><div class="dcbd">
+      <p style="font-size:10px;color:var(--txt3);margin-bottom:14px">Baseline = standard IRROPS handling (generic SMS + manual rebooking). With JourneyMate = proactive, personalised, one-tap recovery.</p>
+      <div style="margin-bottom:6px;font-size:10px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px">2-hour delay</div>
+      <div class="nrow"><div class="nlbl">Without JourneyMate</div><div class="nbar"><div class="nfill" style="width:32%;background:var(--red)"></div></div><div class="nval" style="color:var(--red)">-18</div></div>
+      <div class="nrow"><div class="nlbl">With JourneyMate</div><div class="nbar"><div class="nfill" style="width:61%;background:var(--grn)"></div></div><div class="nval" style="color:var(--grn)">+12</div></div>
+      <div style="margin:14px 0 6px;font-size:10px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px">4-hour delay / missed connection</div>
+      <div class="nrow"><div class="nlbl">Without JourneyMate</div><div class="nbar"><div class="nfill" style="width:22%;background:var(--red)"></div></div><div class="nval" style="color:var(--red)">-28</div></div>
+      <div class="nrow"><div class="nlbl">With JourneyMate</div><div class="nbar"><div class="nfill" style="width:68%;background:var(--grn)"></div></div><div class="nval" style="color:var(--grn)">+18</div></div>
+      <div style="margin:14px 0 6px;font-size:10px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px">Cancellation overnight</div>
+      <div class="nrow"><div class="nlbl">Without JourneyMate</div><div class="nbar"><div class="nfill" style="width:8%;background:var(--red)"></div></div><div class="nval" style="color:var(--red)">-42</div></div>
+      <div class="nrow"><div class="nlbl">With JourneyMate</div><div class="nbar"><div class="nfill" style="width:72%;background:var(--grn)"></div></div><div class="nval" style="color:var(--grn)">+22</div></div>
+    </div></div>
+    <div class="dhl blue"><strong>Service recovery paradox:</strong> Research shows passengers who experience disruption AND are handled exceptionally well score higher NPS than passengers who were never disrupted. JourneyMate is designed to trigger this effect at scale. Source: Bain and Company Airlines NPS Study 2022.</div>
+  </div>
+  <div class="dsec" id="ds-sources">
+    <div class="dsec-title">Data Sources and Citations</div>
+    <div class="dsec-sub">All assumptions are sourced from published research or explicitly marked as estimated with conservative methodology.</div>
+    <div class="dcard"><div class="dchd">Published sources</div><div class="dcbd">
+      <table class="dtbl"><tr><th>Source</th><th>Used for</th><th>Key data points</th></tr>
+      <tr><td>IATA Ancillary Revenue Report 2023</td><td>Conversion rates, revenue benchmarks</td><td>Global avg $28.4/pax; cancellations drive 2.8x ancillary vs delays</td></tr>
+      <tr><td>IATA Customer Experience Report 2023</td><td>NPS benchmarks, churn probability</td><td>52% churn after poorly handled cancellation</td></tr>
+      <tr><td>Bain and Company Airlines NPS Study 2022</td><td>NPS by disruption type</td><td>Baseline disruption NPS scores; service recovery paradox</td></tr>
+      <tr><td>CAPA India Airline Ops Benchmarks 2023</td><td>Agent handling cost</td><td>Rs 80/min fully loaded call centre cost; avg call durations</td></tr>
+      <tr><td>OAG On-Time Performance India 2023</td><td>Disruption rate baseline</td><td>12-15% of Indian domestic flights delayed 90+ min annually</td></tr>
+      <tr><td>DGCA Traffic Statistics 2024</td><td>Passenger volumes for scale calculation</td><td>IndiGo 100M pax FY2024; 87% load factor</td></tr>
+      <tr><td>J.D. Power Asia Pacific Airline Study 2023</td><td>Family segment NPS benchmarks</td><td>Families with children show -45 avg NPS on cancellation</td></tr>
+      <tr><td>Amadeus Airline Merchandising 2023</td><td>Seat upgrade conversion rates</td><td>20% Platinum conversion on extra legroom at disruption rebooking</td></tr></table>
+    </div></div>
+  </div>
+  <div style="text-align:center;padding:28px;font-size:11px;color:var(--txt3)">JourneyMate · ICAIPM GenAI PM Capstone · All data sourced and traceable</div>
+</div>
+
+<script>
+var P=[
+  {id:'vn',i:'VN',n:'Vaishnavi Nair',t:'Platinum',s:'Solo business · aisle seat · quiet hotels',av:'background:#dbeafe;color:#1e40af'},
+  {id:'rf',i:'RF',n:'Ramesh family',t:'Gold',s:'Family of 4 · economy · kids priority',av:'background:#dcfce7;color:#166534'},
+  {id:'ab',i:'AB',n:'Arjun Backpacker',t:'Blue',s:'Solo leisure · budget · flexible',av:'background:#fef9c3;color:#854d0e'}
+];
+var D=[
+  {id:'d4h',icon:'⏱',lbl:'Flight delayed 4 hours — connection missed'},
+  {id:'can',icon:'✕',lbl:'Flight cancelled — next available 12 hours'},
+  {id:'d2h',icon:'⚠',lbl:'Short delay 2 hours — tight connection'},
+  {id:'div',icon:'📍',lbl:'Diverted to alternate airport'}
+];
+var PH=[
+  {id:'inspire',icon:'💡',lbl:'Inspiration — destination ideas'},
+  {id:'book',icon:'🎫',lbl:'Booking — cross-sell at checkout'},
+  {id:'pretrip',icon:'🧳',lbl:'Pre-departure — enriching the trip'},
+  {id:'posttrip',icon:'🔄',lbl:'Post-trip — next journey'}
+];
+
+var sp=null,sd=null,cp='vn',ch='inspire',gn=false,cgn=false;
+
+var RT={
+  'vn-d4h':`Dear Vaishnavi, I've taken care of everything so you don't have to.\n\nYour 6E-204 is delayed 4 hours — your BOM to LHR connection will be missed. I've rebooked you on the 23:45 BOM to LHR with your preferred aisle seat confirmed throughout.\n\nPrimus Lounge at Chennai T1 is arranged — quiet, strong Wi-Fi, hot meals. Your Heathrow transfer has been rescheduled automatically.\n\nAs a Platinum member your full DGCA compensation is logged — including your meal entitlement today. Gate alert 90 minutes before new departure.\n\nWarm regards,\nJourneyMate`,
+  'vn-can':`Dear Vaishnavi, your 6E-204 has been cancelled — I've moved quickly to sort everything out.\n\nRebooked on tomorrow's 06:30 MAA to BOM to LHR with your aisle seat confirmed. ITC Grand Chola tonight — quiet, near the airport, matches your usual preference. Transfer rescheduled automatically.\n\nAs a Platinum member under DGCA cancellation rules — full rebooking, hotel, and meals arranged without you needing to queue or call anyone.\n\nTake a breath. Everything is in order.\n\nWarm regards,\nJourneyMate`,
+  'vn-d2h':`Dear Vaishnavi, your 6E-204 is running 2 hours late — your BOM to LHR connection is under pressure.\n\nYour connection departs 10:30 and revised arrival is 10:00 — very tight. Gate escort ready at Mumbai the moment you land.\n\nIf connection is missed I've pre-reserved the 14:45 BOM to LHR with your aisle seat — instant confirmation if needed. DGCA meal entitlement credited.\n\nStay calm — we're watching this for you. Update in 30 minutes.\n\nWarm regards,\nJourneyMate`,
+  'vn-div':`Dear Vaishnavi, flight 6E-204 has been diverted and will not land at Mumbai as planned.\n\nGround transfer to Mumbai coordinated — estimated 90 minutes. BOM to LHR connection moved to 18:00 tonight, aisle seat confirmed. Lounge access arranged at the diversion airport. All DGCA diversion costs covered — keep receipts for automatic reimbursement.\n\nStep-by-step updates as transfer is confirmed. You're in good hands.\n\nWarm regards,\nJourneyMate`,
+  'rf-d4h':`Dear Ramesh, I understand how stressful a 4-hour delay is when travelling with young children.\n\nYour EK-511 is delayed 4 hours — your DXB to LHR connection will be missed. Rebooked all four of you on the 22:15 DXB to LHR with four seats together confirmed in the same row.\n\nFamily lounge at Delhi T3 — children's play area, family dining, quiet rest zones. Meal voucher for the family ready at lounge reception.\n\nAll DGCA entitlements — rebooking, meals, assistance — handled automatically. No queues, no calls.\n\nSafe travels to all of you.\n\nWarm regards,\nJourneyMate`,
+  'rf-can':`Dear Ramesh, I'm sorry your family's flight EK-511 has been cancelled. I've worked quickly to minimise disruption.\n\nRebooked all four on tomorrow's routing with family seats together. Radisson Blu near Delhi airport tonight — family room, breakfast for four, kids' activity area. Dinner vouchers at Gate 12.\n\nUnder DGCA cancellation rules your family is fully covered — hotel, meals, rebooking at zero out-of-pocket cost.\n\nWe'll get your family to London safely.\n\nWarm regards,\nJourneyMate`,
+  'rf-d2h':`Dear Ramesh, your EK-511 is delayed 2 hours — your Dubai connection is under time pressure. Connection departs 14:30, revised arrival 14:00 — tight but manageable.\n\nPriority family lane transfer in Dubai arranged — all four of you move through quickly. Gate escort meets you at the aircraft door.\n\nPre-reserved four seats together on next DXB to LHR if connection is missed. Kids' snack voucher ready at Delhi Gate 8.\n\nUpdate in 30 minutes.\n\nWarm regards,\nJourneyMate`,
+  'rf-div':`Dear Ramesh, flight EK-511 has been diverted unexpectedly. Everything is being handled.\n\nFamily coach transfer departs in 60 minutes — air conditioned, refreshments on board. DXB to LHR connection moved to tomorrow 09:00 service, four seats together confirmed.\n\nTonight I've booked a family suite at Dubai Premier Inn — breakfast included, pool access for the kids. All diversion costs covered under your booking entitlements.\n\nI'll send new boarding passes first thing tomorrow.\n\nWarm regards,\nJourneyMate`,
+  'ab-d4h':`Hey Arjun, your 6E-85 to Singapore is delayed 4 hours — new departure around 02:45. Direct route so no connection is affected.\n\nUnder DGCA rules for delays over 2 hours you're entitled to a Rs 500 meal voucher — sent to your app now, valid at any terminal restaurant.\n\nYou don't have a hotel booked in Singapore yet. Arriving around 06:30 local time — I've found three budget options near Changi under SGD 60 with flexible check-in. Worth booking now while availability is good.\n\nBoarding reminder 90 minutes before new departure.\n\nJourneyMate`,
+  'ab-can':`Hey Arjun, your flight 6E-85 to Singapore has been cancelled. Here's what you're entitled to.\n\nReserved your seat on the next available Bengaluru to Singapore departing tomorrow 21:15 at no charge. Under DGCA cancellation rules you're also entitled to hotel tonight and meals — budget option Rs 1,800 near airport, free cancellation.\n\nMeal vouchers totalling Rs 1,000 covering dinner and breakfast sent to your app — show your phone, no queues.\n\nIf you have a hostel or tours in Singapore for tomorrow, message them now. Most are flexible for genuine cancellations.\n\nJourneyMate`,
+  'ab-d2h':`Hey Arjun, your 6E-85 to Singapore is running about 2 hours late — new departure around 00:45. Direct route, no connection affected.\n\nYou're entitled to a Rs 500 meal voucher — in your app now, valid at any terminal food outlet. The food court near Gate 14 is open late.\n\nSince you'll arrive into Singapore later than planned (around 07:00 local), hostels near Bugis or Little India often have flexible late check-in.\n\nBoarding reminder at 00:00.\n\nJourneyMate`,
+  'ab-div':`Hey Arjun, your flight 6E-85 has been diverted and won't land in Singapore as planned.\n\nYou'll be on the next available service into Changi — estimated arrival tomorrow morning. Transfer from the diversion point is being arranged and all costs are fully covered — zero out-of-pocket.\n\nAccommodation tonight at the diversion location is being arranged — budget-friendly, breakfast included. Meal vouchers for dinner sent to your app.\n\nIf you have hostel bookings or day-1 activities in Singapore, a quick message now will sort things — most are very flexible for genuine diversions.\n\nUpdate every hour.\n\nJourneyMate`
+};
+
+var CR={
+  'vn-inspire':`Hi Vaishnavi, based on your travel history you haven't booked a leisure trip in 8 months — your last non-business trip was Bali in March.\n\nGiven your preference for quiet premium properties and your upcoming long weekend in November, three destinations matched to your profile:\n\n🌏 Phuket, Thailand — 4h direct from Chennai. The Rosewood Phuket has availability. Friday evening flight, Monday return.\n\n🏔 Coorg, Karnataka — 1h flight to Mysore. Taj Coorg resort — quiet, no crowds, your kind of property. Perfect 3-night reset.\n\n🏛 Pondicherry — 3h drive from Chennai. Boutique heritage hotels, French quarter, completely different pace from your work travel.\n\nAll three pre-filtered on your past preference: quiet, 4-star+, near nature. Want a detailed itinerary for any of these?\n\nJourneyMate`,
+  'vn-book':`Hi Vaishnavi, I see you've just booked MAA to LHR on 6E-204/6E-11 departing 15 November. A few things pre-arranged based on your preferences — confirm with one tap:\n\n✅ Aisle seat 4C secured on both legs\n🏨 Sofitel Heathrow T5 — £189/night. You gave it 5 stars in March. Same rate.\n🚗 Direct car service from Heathrow — £68 given your late arrival.\n📋 Missed connection cover + luggage protection — £24. MAA-BOM is weather-sensitive.\n\nThese add £213 to your trip. Confirm all or pick individually.\n\nJourneyMate`,
+  'vn-pretrip':`Hi Vaishnavi, your London trip is in 3 days — here's what I've put together:\n\n📍 You land at 14:45. First meeting Thursday 09:00 in Canary Wharf. Pre-mapped route — 45 min via DLR from your hotel.\n\n🍽 Wednesday evening is free. Three Michelin-recommended vegetarian restaurants within 15 minutes of your hotel — Mildreds Soho, Gauthier, Vanilla Black. Reservation available at all three for 19:30.\n\n☂ London forecast: rain Thursday and Friday. Your morning walk — Borough Market visit would work better indoors.\n\n📦 Your usual Boots order can be delivered to your hotel by Wednesday evening — same as your last London trip. Shall I reorder?\n\nJourneyMate`,
+  'vn-posttrip':`Hi Vaishnavi, welcome back from London. Hope the meetings went well.\n\n⭐ Your Sofitel T5 rating when you get a moment helps me refine future recommendations.\n\n✈ Your next confirmed trip is MAA to DEL on 3 December. Based on your pattern, you usually book a leisure trip within 6 weeks of a long-haul business run. Bali is showing good January availability — shall I put together options?\n\n🏅 Platinum renewal due March. You're 4,200 miles short. MAA to DEL round trip gives you 3,400 — one more short trip closes the gap.\n\nJourneyMate`,
+  'rf-inspire':`Hi Ramesh, the kids' school holidays are coming up in December — 3 weeks. Based on your family's past trips (Dubai 2022, Singapore 2023), three destinations for a family of 4 with children aged 8 and 10:\n\n🏖 Maldives — overwater villa experience, strong kids' clubs. Conrad Maldives has good family packages.\n\n🎡 Bangkok + Phuket combo — 5 nights Bangkok (Legoland, street food, temples), 4 nights Phuket. Comparable to your Dubai 2022 spend.\n\n🏔 Himachal Pradesh — Manali in December. Snow, 8-10h drive, no flights needed. Very budget-friendly and the kids would love it.\n\nWhich direction interests you?\n\nJourneyMate`,
+  'rf-book':`Hi Ramesh, I see you've booked DEL to DXB to LHR for the family on 20 December. A few add-ons that make sense for a family of 4 on a long-haul trip:\n\n💺 Rows 32-33, window+aisle pairs. Both children have window seats.\n🍱 Child meals CHML pre-ordered for both kids on all legs.\n🏨 Family suite at Holiday Inn Kensington — sleeps 4, kids' activity room, breakfast. £189/night — £40 less than your last London hotel.\n🎡 Legoland Windsor 26 Dec available — sells out fast in school holidays. Shall I book?\n📋 Family travel insurance — all 4 covered including kids' medical. £68 total.\n\nJourneyMate`,
+  'rf-pretrip':`Hi Ramesh, your London family trip is in 5 days — here's what I've organised:\n\n🎒 London averages 5 degrees in December. Kids' packing checklist added to your app: gloves, thermal layers, waterproof shoes.\n\n🎠 Legoland confirmed 26 December, 10am. Windsor train from London Waterloo takes 55 minutes — timed with your hotel checkout.\n\n🍕 Family restaurant near your hotel with a dedicated kids' menu, open Christmas Day — reservation available for 18:00 if you want it.\n\n✈ Check-in opens tomorrow for your DEL to DXB leg. I'll check you in automatically at midnight and send boarding passes.\n\nJourneyMate`,
+  'rf-posttrip':`Hi Ramesh, welcome back from London! Hope the kids had a fantastic time at Legoland.\n\n⭐ Quick rating for the Holiday Inn — helps me find better options next time.\n\n📸 Next school holiday window is May. Based on this trip, Thailand or Bali would work well for the family — warmer weather, shorter flight, strong kids' activities. Shall I start monitoring fares?\n\n🏅 Your Gold status is safe for another year. You're now 8,200 miles from Platinum, which unlocks lounge access for the whole family.\n\nJourneyMate`,
+  'ab-inspire':`Hey Arjun, you've done Singapore and Bali in the last 18 months — time for somewhere new?\n\nBased on your travel style (budget, solo, flexible dates, no hotel pre-booked):\n\n🇯🇵 Japan — Tokyo + Kyoto in 10 days. Hostels SGD 25-35/night. Flights from Bengaluru around Rs 35,000 return. Best time: March cherry blossom or November.\n\n🇻🇳 Vietnam — Ho Chi Minh to Hanoi, 2-week north-south route. Cheapest destination on this list. Hostels from Rs 600/night.\n\n🇱🇰 Sri Lanka — 4h from Chennai, visa on arrival, incredibly underrated. Tea plantations, beaches, temples. Budget Rs 40,000 all-in for 10 days.\n\nAll three are solo-travel friendly with strong backpacker communities. Which one sparks something?\n\nJourneyMate`,
+  'ab-book':`Hey Arjun, I see you've booked BLR to SIN on 6E-85. A few things worth knowing:\n\n📋 Singapore requires proof of onward travel at immigration — no return flight detected. This occasionally causes issues. Shall I find the cheapest flexible option?\n\n🏨 No hotel detected in Singapore. The Pod at Beach Road (SGD 35/night, excellent solo reviews) or Adler Hostel in Chinatown (SGD 28/night, quieter).\n\n🎒 Baggage allowance is 7kg on 6E-85. Your last trip you were flagged at the gate for 8.2kg — worth checking before you go.\n\n💳 Notify your bank before departure — Indian cards sometimes get blocked overseas without a travel notice.\n\nJourneyMate`,
+  'ab-pretrip':`Hey Arjun, Singapore in 2 days — quick brief:\n\n🌡 Weather: 31 degrees, humid, afternoon showers likely. Pack light, bring a compact umbrella.\n\n🚌 Changi to your hostel: MRT is cheapest (SGD 2.50, 45 min). Tourist Pass SGD 10 — covers all MRT and bus for 3 days.\n\n🍜 Maxwell Food Centre 2 min from The Pod — Tian Tian Hainanese Chicken Rice is famous, queue is worth it. Budget SGD 4-6 per meal.\n\n📱 Free SIM at Changi — Circles.Life SGD 10 for 100GB, 15 days. Best tourist data plan.\n\nJourneyMate`,
+  'ab-posttrip':`Hey Arjun, welcome back from Singapore!\n\n⭐ How was The Pod hostel? Genuinely useful for other solo travellers if you leave a rating.\n\n✈ Japan keeps coming up as the natural next step for travellers with your profile. March fares from Bengaluru via Singapore are around Rs 38,000 return — good price for cherry blossom season.\n\n🏅 You're now 2,100 miles from Blue+ tier which unlocks priority check-in. One more short trip closes it.\n\nJourneyMate`
+};
+
+var CSD={
+  'vn-book':[{icon:'🏨',lbl:'Hotel — Sofitel T5',val:'£189/night',conv:'Pre-matched to past stay'},{icon:'🚗',lbl:'Airport transfer',val:'£68 direct car',conv:'vs £45 train+cab'},{icon:'📋',lbl:'Travel insurance',val:'£24',conv:'Missed connection cover'}],
+  'rf-book':[{icon:'🎡',lbl:'Legoland tickets',val:'£42/child',conv:'Sells out fast in Dec'},{icon:'🏨',lbl:'Family suite hotel',val:'£189/night',conv:'Saves £40 vs last trip'},{icon:'📋',lbl:'Family insurance',val:'£68 total',conv:'All 4 covered'}],
+  'ab-book':[{icon:'🏨',lbl:'The Pod hostel',val:'SGD 35/night',conv:'4.8 star solo rating'},{icon:'✈',lbl:'Onward ticket',val:'From Rs 8,200',conv:'Required for SG immigration'},{icon:'📱',lbl:'Tourist SIM 100GB',val:'SGD 10',conv:'Best data deal at Changi'}],
+  'vn-pretrip':[{icon:'🍽',lbl:'Vanilla Black dinner',val:'19:30 reservation',conv:'Michelin · Vegetarian'},{icon:'📦',lbl:'Boots hotel delivery',val:'~£35',conv:'Same as last London trip'},{icon:'☂',lbl:'Borough Market visit',val:'Rain Thu-Fri',conv:'Weather-adjusted plan'}],
+  'rf-pretrip':[{icon:'🍕',lbl:'Christmas Day dinner',val:'Kids menu available',conv:'Book now — rare in London'},{icon:'🎠',lbl:'Legoland confirmed',val:'26 Dec 10am',conv:'Windsor train pre-timed'},{icon:'✈',lbl:'Auto check-in',val:'Tonight midnight',conv:'Boarding passes sent'}],
+  'ab-pretrip':[{icon:'🚌',lbl:'Tourist MRT Pass',val:'SGD 10 / 3 days',conv:'Covers all transport'},{icon:'📱',lbl:'Circles SIM 100GB',val:'SGD 10',conv:'Best tourist data plan'},{icon:'🍜',lbl:'Maxwell Food Centre',val:'SGD 4-6/meal',conv:'2 min from hostel'}]
+};
+
+var MET={
+  'vn-d4h':{cost:'Rs 2,400',anc:'Rs 1,100',nps:'+18 pts'},
+  'vn-can':{cost:'Rs 2,400',anc:'Rs 3,200',nps:'+22 pts'},
+  'vn-d2h':{cost:'Rs 1,200',anc:'Rs 480',nps:'+12 pts'},
+  'vn-div':{cost:'Rs 2,800',anc:'Rs 2,400',nps:'+20 pts'},
+  'rf-d4h':{cost:'Rs 2,400',anc:'Rs 1,600',nps:'+16 pts'},
+  'rf-can':{cost:'Rs 2,880',anc:'Rs 4,280',nps:'+24 pts'},
+  'rf-d2h':{cost:'Rs 1,200',anc:'Rs 600',nps:'+10 pts'},
+  'rf-div':{cost:'Rs 3,200',anc:'Rs 3,200',nps:'+19 pts'},
+  'ab-d4h':{cost:'Rs 800',anc:'Rs 320',nps:'+8 pts'},
+  'ab-can':{cost:'Rs 800',anc:'Rs 400',nps:'+14 pts'},
+  'ab-d2h':{cost:'Rs 600',anc:'Rs 80',nps:'+6 pts'},
+  'ab-div':{cost:'Rs 800',anc:'Rs 600',nps:'+12 pts'}
+};
+
+function goto(id){
+  ['p','c','r','d','rag'].forEach(function(x){
+    document.getElementById('pg-'+x).classList.remove('on');
+    document.getElementById('nl-'+x).classList.remove('on');
+  });
+  document.getElementById('pg-'+id).classList.add('on');
+  document.getElementById('nl-'+id).classList.add('on');
+  window.scrollTo(0,0);
+}
+
+function showDTab(id,el){
+  document.querySelectorAll('.dsec').forEach(function(s){s.classList.remove('on')});
+  document.querySelectorAll('.dtab').forEach(function(t){t.classList.remove('on')});
+  document.getElementById('ds-'+id).classList.add('on');
+  el.classList.add('on');
+}
+
+function filterP(seg,el){
+  document.querySelectorAll('.spill').forEach(function(p){p.classList.remove('sp-on')});
+  el.classList.add('sp-on');
+  document.querySelectorAll('.pcard').forEach(function(c){
+    c.style.display=(seg==='all'||c.dataset.seg===seg)?'block':'none';
+  });
+  document.getElementById('pgrid').style.gridTemplateColumns=seg==='all'?'repeat(3,1fr)':'1fr';
+}
+
+function rSB(){
+  document.getElementById('pl').innerHTML=P.map(function(p){
+    return '<div class="pc'+(sp&&sp.id===p.id?' sel':'')+'" onclick="pickP(\''+p.id+'\')">'
+      +'<div class="ptop"><div class="pav" style="'+p.av+'">'+p.i+'</div>'
+      +'<div><div class="pnm">'+p.n+'</div><div style="font-size:9px;color:var(--txt3)">'+p.t+'</div></div></div>'
+      +'<div class="psg">'+p.s+'</div></div>';
+  }).join('');
+  document.getElementById('dl').innerHTML=D.map(function(d){
+    return '<button class="db'+(sd&&sd.id===d.id?' sel':'')+'" onclick="pickD(\''+d.id+'\')">'
+      +d.icon+' '+d.lbl+'</button>';
+  }).join('');
+  document.getElementById('gb').disabled=!(sp&&sd)||gn;
+}
+
+function rCSB(){
+  document.getElementById('cpl').innerHTML=P.map(function(p){
+    return '<div class="pc'+(cp===p.id?' sel':'')+'" onclick="pickCP(\''+p.id+'\')">'
+      +'<div class="ptop"><div class="pav" style="'+p.av+'">'+p.i+'</div>'
+      +'<div><div class="pnm">'+p.n+'</div><div style="font-size:9px;color:var(--txt3)">'+p.t+'</div></div></div>'
+      +'<div class="psg">'+p.s+'</div></div>';
+  }).join('');
+  document.getElementById('chl').innerHTML=PH.map(function(ph){
+    return '<button class="db'+(ch===ph.id?' gsel':'')+'" onclick="pickCH(\''+ph.id+'\')">'
+      +ph.icon+' '+ph.lbl+'</button>';
+  }).join('');
+  document.getElementById('cgb').disabled=false;
+}
+
+function pickP(id){sp=P.find(function(p){return p.id===id});rSB();rMain()}
+function pickD(id){sd=D.find(function(d){return d.id===id});rSB();rMain()}
+function pickCP(id){cp=id;rCSB();rCMain()}
+function pickCH(id){ch=id;rCSB();rCMain()}
+
+function chipCls(id){return(id==='can'||id==='d4h'||id==='div')?'red':'grn'}
+function chipTxt(id){if(id==='can')return'✕ Cancelled';if(id==='d4h')return'⏱ Delayed 4h';if(id==='d2h')return'⚠ Delayed 2h';return'📍 Diverted'}
+
+function rMain(){
+  if(!sp||!sd){
+    document.getElementById('mc').innerHTML='<div class="empty"><div style="font-size:32px;margin-bottom:10px">✈</div><div style="font-size:14px;font-weight:500;color:var(--txt2);margin-bottom:5px">Select a traveller and disruption</div><div style="font-size:11px">JourneyMate generates a personalised AI recovery plan</div></div>';
+    return;
+  }
+  var k=sp.id+'-'+sd.id;
+  var m=MET[k]||{cost:'Rs 800',anc:'Rs 400',nps:'+10 pts'};
+  var r=sp.id==='vn'?['MAA','BOM','LHR']:sp.id==='rf'?['DEL','DXB','LHR']:['BLR','SIN'];
+  var c=sp.id==='vn'?['Chennai','Mumbai','London']:sp.id==='rf'?['Delhi','Dubai','London']:['Bengaluru','Singapore'];
+  document.getElementById('mc').innerHTML=
+    '<div class="card">'
+    +'<div class="pmeta blue"><div class="pav" style="'+sp.av+';width:26px;height:26px;font-size:10px">'+sp.i+'</div>'
+    +'<div><span class="pman blue">'+sp.n+' · '+sp.t+'</span>&nbsp;<span class="pmas blue">'+sp.s+'</span></div>'
+    +'<div style="margin-left:auto;font-size:9px;color:var(--pur);background:var(--surf);border:1px solid var(--pur-bdr);border-radius:3px;padding:1px 6px">RAG loaded</div></div>'
+    +'<div class="alert red"><span style="font-size:16px;color:var(--red);flex-shrink:0">⚠</span>'
+    +'<div><div class="at red">'+sd.lbl+'</div><div class="as red">Detected via live flight feed · JourneyMate activated</div></div></div>'
+    +'<div class="cbd"><div style="display:flex;align-items:center;justify-content:space-between">'
+    +'<div style="display:flex;align-items:center;gap:8px">'
+    +'<div><div style="font-size:22px;font-weight:600;font-family:Inter,sans-serif">'+r[0]+'</div><div style="font-size:9px;color:var(--txt3)">'+c[0]+'</div></div>'
+    +(r.length===3?'<div style="flex:1;height:1px;width:20px;background:var(--bdr)"></div><div><div style="font-size:17px;font-weight:600;color:var(--txt3);font-family:Inter,sans-serif">'+r[1]+'</div><div style="font-size:9px;color:var(--txt3)">'+c[1]+'</div></div><div style="width:16px;height:1px;background:var(--bdr)"></div>':'<div style="width:32px;height:1px;background:var(--bdr)"></div>')
+    +'<div><div style="font-size:22px;font-weight:600;font-family:Inter,sans-serif">'+r[r.length-1]+'</div><div style="font-size:9px;color:var(--txt3)">'+c[c.length-1]+'</div></div>'
+    +'</div><span class="chip '+chipCls(sd.id)+'">'+chipTxt(sd.id)+'</span></div></div></div>'
+    +'<div class="card"><div class="chd">RAG context retrieved<span style="color:var(--grn);font-weight:600">✓ 3 sources</span></div>'
+    +'<div class="cbd"><div class="rag">'
+    +'<div class="rb"><span class="ri">👤</span><div class="rl">Loyalty profile</div><div class="rd">'+sp.t+' · '+sp.s+'</div></div>'
+    +'<div class="rb"><span class="ri">✈</span><div class="rl">Live inventory</div><div class="rd">Lounges · hotels · transfers · next flights</div></div>'
+    +'<div class="rb"><span class="ri">📋</span><div class="rl">DGCA policy</div><div class="rd">Compensation rules · entitlements · rebooking rights</div></div>'
+    +'</div></div></div>'
+    +'<div class="acard blue"><div class="ahd blue"><div class="adot blue"></div><span class="albl blue">JourneyMate recovery plan</span><span class="atag">Generative AI</span></div>'
+    +'<div class="abd"><div class="aph" id="aout">Press generate to see the personalised AI response for '+sp.n+'.</div>'
+    +'<div id="mrow" style="display:none" class="mrow">'
+    +'<div class="mb" onclick="alert(\'Op cost saved: '+m.cost+'\\n\\nCall centre avoided: Rs 1,440\\nRebooking avoided: Rs 720\\nAdmin: Rs 240\\n\\nSource: CAPA India Airline Ops 2023\')"><div class="mv">'+m.cost+'</div><div class="ml">Op. cost saved</div><div class="mh">tap for breakdown</div></div>'
+    +'<div class="mb" onclick="alert(\'Ancillary revenue: '+m.anc+'\\n\\nConversion-adjusted figures.\\nExcludes complimentary items.\\nExcludes pre-trip insurance.\\n\\nSource: IATA Ancillary Report 2023\')"><div class="mv">'+m.anc+'</div><div class="ml">Ancillary revenue</div><div class="mh">tap for breakdown</div></div>'
+    +'<div class="mb" onclick="alert(\'NPS impact: '+m.nps+'\\n\\nBaseline: disruption handled generically\\nWith JourneyMate: proactive personalised recovery\\n\\nSource: Bain & Company Airlines NPS Study 2022\\n\\nEach 1pt NPS improvement = ~0.4% churn reduction\')"><div class="mv">'+m.nps+'</div><div class="ml">NPS impact</div><div class="mh">tap for methodology</div></div>'
+    +'</div></div></div>';
+}
+
+function rCMain(){
+  var p=P.find(function(x){return x.id===cp});
+  var ph=PH.find(function(x){return x.id===ch});
+  var k=cp+'-'+ch;
+  var cs=CSD[k]||null;
+  document.getElementById('cmc').innerHTML=
+    '<div class="card">'
+    +'<div class="pmeta green"><div class="pav" style="'+p.av+';width:26px;height:26px;font-size:10px">'+p.i+'</div>'
+    +'<div><span class="pman green">'+p.n+' · '+p.t+'</span>&nbsp;<span class="pmas green">'+p.s+'</span></div>'
+    +'<div style="margin-left:auto;font-size:9px;color:var(--grn);background:var(--surf);border:1px solid var(--grn-bdr);border-radius:3px;padding:1px 6px">Companion Mode</div></div>'
+    +'<div class="alert green"><span style="font-size:18px;flex-shrink:0">'+ph.icon+'</span>'
+    +'<div><div class="at green">'+ph.lbl+'</div><div class="as green">Personalised to '+p.n+'\'s travel profile · RAG context loaded</div></div></div>'
+    +'<div class="cbd"><div class="rag">'
+    +'<div class="rb"><span class="ri">👤</span><div class="rl">Travel history</div><div class="rd">Past trips · preferences · loyalty tier · spending patterns</div></div>'
+    +'<div class="rb"><span class="ri">📅</span><div class="rl">Live context</div><div class="rd">Calendar · bookings · destination data · partner inventory</div></div>'
+    +'<div class="rb"><span class="ri">💡</span><div class="rl">Personalisation model</div><div class="rd">K-means segment · ancillary behaviour · conversion history</div></div>'
+    +'</div></div></div>'
+    +'<div class="acard green"><div class="ahd green"><div class="adot green"></div><span class="albl green">JourneyMate companion plan</span><span class="atag" style="color:var(--grn)">🌍 Companion Mode</span></div>'
+    +'<div class="abd"><div class="aph" id="cout">Press generate to see the personalised '+ph.lbl.toLowerCase()+' message for '+p.n+'.</div>'
+    +(cs?'<div id="crow" style="display:none" class="csrow"><div class="cstit">Cross-sell opportunities detected</div><div class="csgrid" id="citems"></div></div>':'')
+    +'</div></div>';
+}
+
+function stream(elId,txt,onDone,green){
+  var out=document.getElementById(elId);
+  if(!out)return;
+  out.className='atxt';out.textContent='';
+  var cur=document.createElement('span');
+  cur.className='cur'+(green?' g':'');
+  out.appendChild(cur);
+  var i=0;
+  function tick(){
+    if(i<txt.length){
+      out.insertBefore(document.createTextNode(txt[i]),cur);i++;
+      setTimeout(tick,txt[i-1]==='\n'?65:txt[i-1]===','||txt[i-1]==='.'?45:11+Math.random()*7);
+    } else {out.removeChild(cur);if(onDone)onDone();}
+  }
+  tick();
+}
+
+function gen(){
+  if(gn||!sp||!sd)return;
+  gn=true;
+  document.getElementById('gb').disabled=true;
+  document.getElementById('gc').innerHTML='<div class="spinner"></div> Generating...';
+  var out=document.getElementById('aout');
+  out.className='aph';out.textContent='Retrieving RAG context and generating personalised recovery plan...';
+  var k=sp.id+'-'+sd.id;
+  var txt=RT[k]||'Recovery plan being prepared.';
+  setTimeout(function(){
+    stream('aout',txt,function(){
+      document.getElementById('mrow').style.display='grid';
+      gn=false;
+      document.getElementById('gb').disabled=false;
+      document.getElementById('gc').innerHTML='↺ Regenerate plan';
+    },false);
+  },1000+Math.random()*700);
+}
+
+function cgen(){
+  if(cgn)return;
+  cgn=true;
+  document.getElementById('cgb').disabled=true;
+  document.getElementById('cgc').innerHTML='<div class="spinner"></div> Generating...';
+  var out=document.getElementById('cout');
+  if(!out){rCMain();out=document.getElementById('cout');}
+  if(!out){cgn=false;document.getElementById('cgb').disabled=false;document.getElementById('cgc').innerHTML='🌍 Generate companion plan';return;}
+  out.className='aph';out.textContent='Retrieving travel profile and generating companion plan...';
+  var k=cp+'-'+ch;
+  var txt=CR[k]||'Generating your personalised companion plan.';
+  var cs=CSD[k]||null;
+  setTimeout(function(){
+    stream('cout',txt,function(){
+      if(cs){
+        var row=document.getElementById('crow');
+        var items=document.getElementById('citems');
+        if(row&&items){
+          items.innerHTML=cs.map(function(it){
+            return '<div class="csitem"><div class="csicon">'+it.icon+'</div><div class="cslbl">'+it.lbl+'</div><div class="csval">'+it.val+'</div><div class="csconv">'+it.conv+'</div></div>';
+          }).join('');
+          row.style.display='block';
+        }
+      }
+      cgn=false;
+      document.getElementById('cgb').disabled=false;
+      document.getElementById('cgc').innerHTML='↺ Regenerate companion plan';
+    },true);
+  },1000+Math.random()*700);
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  rSB();rCSB();rCMain();
+});
+</script>
+
+<!-- RAG ARCHITECTURE PAGE -->
+<div class="pg" id="pg-rag" style="background:var(--navy)">
+<div class="hero">
+  <div class="eyebrow">Technical architecture · LangFlow · RAG pipeline · Vector DB</div>
+  <h1 class="hero-title">How JourneyMate <span>knows what to say</span></h1>
+  <p class="hero-sub">Every personalised message JourneyMate generates is grounded in real retrieved data — not hallucinated. This page explains the full RAG pipeline: from live data ingestion to the final AI-generated response delivered to the traveller.</p>
+  <div class="hero-chips">
+    <div class="chip chip-orange">LangFlow orchestration</div>
+    <div class="chip chip-purple">Pinecone vector DB</div>
+    <div class="chip chip-blue">Claude Haiku + Sonnet</div>
+    <div class="chip chip-green">3 live data sources</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- WHAT IS RAG -->
+  <div class="sec">
+    <div class="sec-label">Concept</div>
+    <div class="sec-title">What is RAG and why does JourneyMate use it?</div>
+    <div class="sec-sub">RAG stands for Retrieval-Augmented Generation. Instead of relying on what the AI model was trained on (which goes stale), RAG retrieves fresh, relevant data at the moment of generation and passes it as context to the LLM. The model then generates language — not facts.</div>
+    <div class="flow">
+      <div class="flow-box fb-source">Live data sources</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box fb-process">Chunk + embed</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box fb-store">Vector DB (Pinecone)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box fb-retrieve">Retrieve relevant chunks</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box fb-generate">LLM generates message</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box fb-deliver">Deliver to traveller</div>
+    </div>
+    <div class="cards-grid" style="margin-top:14px">
+      <div class="info-card">
+        <div class="info-card-icon">🚫</div>
+        <div class="info-card-title">Why not fine-tuning?</div>
+        <div class="info-card-detail">DGCA policy changes frequently. Fine-tuning bakes knowledge into the model at training time — it goes stale. A fine-tuned model might cite outdated compensation rules and create legal liability.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">✓</div>
+        <div class="info-card-title">Why RAG works here</div>
+        <div class="info-card-detail">Policy corpus in Pinecone is updated whenever DGCA publishes new circulars. Every generation retrieves the current rule — not a training-time snapshot. Always accurate, always current.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">🔒</div>
+        <div class="info-card-title">Hallucination prevention</div>
+        <div class="info-card-detail">The LLM is explicitly instructed to generate language only from retrieved context. If entitlement data is not in the retrieved chunks, the model does not invent it — it says what it knows.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA SOURCES -->
+  <div class="sec">
+    <div class="sec-label">Step 1 — Data ingestion</div>
+    <div class="sec-title">Three live data sources</div>
+    <div class="sec-sub">JourneyMate retrieves from three separate sources simultaneously the moment a disruption event fires. No single source is enough — personalisation requires all three.</div>
+    <div class="src-grid">
+      <div class="src-node src-pnr">
+        <div class="src-icon">👤</div>
+        <div class="src-title blue">Source 1 — PNR + Loyalty profile</div>
+        <div class="src-items">
+          · Loyalty tier (Platinum / Gold / Blue)<br>
+          · Seat preference (SSR field)<br>
+          · Meal code (VGML, CHML etc)<br>
+          · Past ancillary purchase history<br>
+          · Party size + child passenger flags<br>
+          · Preferred contact channel<br>
+          · Past hotel and lounge behaviour
+        </div>
+        <div class="src-badge badge-blue">Navitaire / Altéa API · read-only · sub-200ms</div>
+      </div>
+      <div class="src-node src-inv">
+        <div class="src-icon">✈</div>
+        <div class="src-title green">Source 2 — Live inventory</div>
+        <div class="src-items">
+          · Lounge availability at current airport<br>
+          · Hotel inventory near airport (Amadeus)<br>
+          · Ground transfer availability<br>
+          · Next available flights on affected route<br>
+          · Seat map on rebooked flight<br>
+          · Real-time flight status + delay reason<br>
+          · Weather at origin and destination
+        </div>
+        <div class="src-badge badge-green">OAG API + Priority Pass API + GDS feed</div>
+      </div>
+      <div class="src-node src-pol">
+        <div class="src-icon">📋</div>
+        <div class="src-title purple">Source 3 — Policy corpus (RAG)</div>
+        <div class="src-items">
+          · DGCA Civil Aviation Requirements<br>
+          · Airline Fair Practices Code<br>
+          · Tier-specific entitlement rules<br>
+          · Compensation amounts by delay duration<br>
+          · Hotel + meal entitlement thresholds<br>
+          · Diversion and cancellation rights<br>
+          · International treaty obligations
+        </div>
+        <div class="src-badge badge-purple">Pinecone vector DB · auto-updated on DGCA publish</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LANGFLOW -->
+  <div class="sec">
+    <div class="sec-label">Step 2 — Orchestration</div>
+    <div class="sec-title">LangFlow pipeline</div>
+    <div class="sec-sub">LangFlow is the orchestration layer that connects all three data sources, manages the retrieval logic, assembles the context window, and routes to the correct LLM. It is the workflow engine that makes RAG operational — not just conceptual.</div>
+    <div class="langflow-box">
+      <div class="lf-header">
+        <div class="lf-logo">LangFlow</div>
+        <div>
+          <div class="lf-title">JourneyMate orchestration pipeline</div>
+          <div class="lf-sub">Visual no-code/low-code RAG workflow — each node is a configurable component</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr;align-items:center;gap:0">
+        <div class="lf-step">
+          <div class="lf-step-num">01</div>
+          <div class="lf-step-name">Trigger node</div>
+          <div class="lf-step-detail">Disruption event fires from flight status feed. Passes flight number + PNR list.</div>
+        </div>
+        <div class="lf-arrow">→</div>
+        <div class="lf-step">
+          <div class="lf-step-num">02</div>
+          <div class="lf-step-name">Data fetch node</div>
+          <div class="lf-step-detail">Parallel API calls to PNR system, inventory partners, and flight status. Timeout: 500ms.</div>
+        </div>
+        <div class="lf-arrow">→</div>
+        <div class="lf-step">
+          <div class="lf-step-num">03</div>
+          <div class="lf-step-name">Vector retrieval node</div>
+          <div class="lf-step-detail">Semantic search against Pinecone policy corpus. Returns top-5 relevant DGCA chunks.</div>
+        </div>
+        <div class="lf-arrow">→</div>
+        <div class="lf-step">
+          <div class="lf-step-num">04</div>
+          <div class="lf-step-name">Prompt assembly node</div>
+          <div class="lf-step-detail">Combines profile + inventory + policy chunks into structured prompt context window.</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr;align-items:center">
+        <div class="lf-step">
+          <div class="lf-step-num">05</div>
+          <div class="lf-step-name">Severity classifier</div>
+          <div class="lf-step-detail">Routes to Haiku (simple delays) or Sonnet (complex multi-leg, family, overnight) based on disruption type.</div>
+        </div>
+        <div class="lf-arrow">→</div>
+        <div class="lf-step">
+          <div class="lf-step-num">06</div>
+          <div class="lf-step-name">LLM generation node</div>
+          <div class="lf-step-detail">Claude Haiku or Sonnet generates personalised recovery message grounded in retrieved context.</div>
+        </div>
+        <div class="lf-arrow">→</div>
+        <div class="lf-step">
+          <div class="lf-step-num">07</div>
+          <div class="lf-step-name">Delivery node</div>
+          <div class="lf-step-detail">Routes to WhatsApp Business API / push notification / SMS based on traveller's contact preference.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VECTOR DB -->
+  <div class="sec">
+    <div class="sec-label">Step 3 — Vector database</div>
+    <div class="sec-title">Pinecone — how the policy corpus works</div>
+    <div class="sec-sub">The DGCA policy corpus is pre-processed, chunked, and embedded into Pinecone before any disruption event. At retrieval time, the disruption context is embedded and the most semantically similar policy chunks are returned in milliseconds.</div>
+    <div class="vdb-box">
+      <div class="vdb-title">📦 Pinecone vector database — JourneyMate policy index</div>
+      <div class="vdb-grid">
+        <div class="vdb-item">
+          <div class="vdb-item-title">Document ingestion</div>
+          <div class="vdb-item-detail">DGCA circulars, airline fair practice codes, and tier entitlement rules are loaded as PDF/text documents into LangFlow's document loader node.</div>
+        </div>
+        <div class="vdb-item">
+          <div class="vdb-item-title">Chunking strategy</div>
+          <div class="vdb-item-detail">Documents are chunked at 512 tokens with 50-token overlap. Each chunk represents one coherent policy rule — not split mid-sentence.</div>
+        </div>
+        <div class="vdb-item">
+          <div class="vdb-item-title">Embedding model</div>
+          <div class="vdb-item-detail">text-embedding-3-small (OpenAI) converts each chunk to a 1536-dimension vector. Same model used at retrieval time for consistency.</div>
+        </div>
+        <div class="vdb-item">
+          <div class="vdb-item-title">Retrieval query</div>
+          <div class="vdb-item-detail">At disruption, the query "passenger entitlements for [disruption type] on [route] for [tier]" is embedded and top-5 nearest chunks are returned by cosine similarity.</div>
+        </div>
+        <div class="vdb-item">
+          <div class="vdb-item-title">Auto-update pipeline</div>
+          <div class="vdb-item-detail">A scheduled LangFlow workflow monitors DGCA's official portal weekly. New circulars trigger automatic re-ingestion, re-chunking, and re-embedding.</div>
+        </div>
+        <div class="vdb-item">
+          <div class="vdb-item-title">Namespace separation</div>
+          <div class="vdb-item-detail">Policy corpus, traveller profiles, and inventory data are stored in separate Pinecone namespaces. No cross-contamination between retrieval contexts.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LLM ROUTING -->
+  <div class="sec">
+    <div class="sec-label">Step 4 — LLM routing</div>
+    <div class="sec-title">Why two models — Haiku and Sonnet</div>
+    <div class="sec-sub">Not every disruption needs the same reasoning depth. JourneyMate routes to the appropriate model based on disruption complexity — optimising for speed, cost, and output quality simultaneously.</div>
+    <div class="llm-box">
+      <div style="font-size:13px;font-weight:600;color:#34d399;margin-bottom:12px">Model routing decision — severity classifier output</div>
+      <div class="llm-grid">
+        <div class="llm-card llm-haiku">
+          <div class="llm-name">Claude Haiku 4.5</div>
+          <div class="llm-detail">
+            Speed: sub-500ms generation<br>
+            Cost: ~$0.001 per call<br>
+            Strength: short, precise text generation at scale<br><br>
+            Used when: simple delay notification, single traveller, no connection missed, standard entitlements
+          </div>
+          <div class="llm-use">Simple delays · 2hr · single pax</div>
+        </div>
+        <div class="llm-card llm-sonnet">
+          <div class="llm-name">Claude Sonnet 4.6</div>
+          <div class="llm-detail">
+            Speed: 1-3 second generation<br>
+            Cost: ~$0.01 per call<br>
+            Strength: complex multi-constraint reasoning<br><br>
+            Used when: family of 4, overnight cancellation, diversion with connecting flight, multiple compensation types stacked
+          </div>
+          <div class="llm-use">Complex disruptions · family · overnight · diversion</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;background:rgba(255,255,255,.04);border-radius:8px;padding:12px 14px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.7">
+        <strong style="color:rgba(255,255,255,.8)">Cost model at IndiGo scale:</strong> 1.5M disrupted passengers/year → 80% routed to Haiku (~$1,200/year) + 20% to Sonnet (~$3,000/year) = <strong style="color:#34d399">Total AI inference cost: ~$4,200/year</strong> against Rs 180+ crore in operational savings. AI cost is effectively zero relative to value delivered.
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMPT STRUCTURE -->
+  <div class="sec">
+    <div class="sec-label">Step 5 — Prompt engineering</div>
+    <div class="sec-title">How the context window is assembled</div>
+    <div class="sec-sub">LangFlow's prompt assembly node combines all three retrieved data sources into a structured prompt. The LLM is explicitly constrained to generate only from this context — preventing hallucination on policy-critical content.</div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;font-family:'DM Mono',monospace;font-size:11px;line-height:1.8;color:rgba(255,255,255,.75)">
+      <div style="color:#fbbf24;margin-bottom:8px">// SYSTEM PROMPT (LangFlow system node)</div>
+      <div>You are JourneyMate, an AI travel companion embedded in an airline app.</div>
+      <div>Generate personalised disruption recovery messages grounded ONLY in the retrieved context below.</div>
+      <div>Do NOT invent entitlements, amounts, or policies not present in the retrieved chunks.</div>
+      <div style="margin-top:10px;color:#60a5fa">// RETRIEVED CONTEXT — assembled by LangFlow</div>
+      <div style="background:rgba(59,130,246,.08);border-radius:6px;padding:10px;margin:6px 0">
+        <div style="color:#60a5fa">TRAVELLER PROFILE (Source 1 — PNR API):</div>
+        <div>Name: Vaishnavi Nair · Tier: Platinum · Seat: Aisle rows 1-5</div>
+        <div>Past lounge usage: 4/5 disruptions · Hotel preference: 4-star near airport</div>
+      </div>
+      <div style="background:rgba(5,122,85,.08);border-radius:6px;padding:10px;margin:6px 0">
+        <div style="color:#34d399">LIVE INVENTORY (Source 2 — OAG + Partner APIs):</div>
+        <div>Next BOM→LHR: 23:45 tonight · Aisle seats available: 4C, 7C, 12C</div>
+        <div>Primus Lounge Chennai T1: open, available · ITC Grand Chola: available</div>
+      </div>
+      <div style="background:rgba(139,92,246,.08);border-radius:6px;padding:10px;margin:6px 0">
+        <div style="color:#a78bfa">POLICY CHUNKS (Source 3 — Pinecone retrieval, top-3):</div>
+        <div>CAR Section 3, Para 3.3: "For delays exceeding 4 hours, airline shall provide meal voucher..."</div>
+        <div>Fair Practices Code 2.1: "Platinum tier passengers entitled to lounge access during delays..."</div>
+        <div>CAR Section 3, Para 3.5: "In case of missed connection due to airline delay, full rebooking..."</div>
+      </div>
+      <div style="color:#fbbf24;margin-top:8px">// GENERATION INSTRUCTION</div>
+      <div>Generate a warm, concise recovery message (150-200 words) addressed to the traveller.</div>
+      <div>Reference only the entitlements and options present in the retrieved context above.</div>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="sec">
+    <div class="sec-label">Step 6 — Output</div>
+    <div class="sec-title">What the traveller receives</div>
+    <div class="sec-sub">The generated message is passed to LangFlow's delivery node, which routes to the traveller's preferred channel — WhatsApp Business API for most Indian travellers. Total pipeline latency from disruption trigger to message delivery: under 8 seconds.</div>
+    <div style="background:rgba(5,122,85,.08);border:1px solid rgba(5,122,85,.25);border-radius:12px;padding:18px 20px">
+      <div style="font-size:12px;font-weight:600;color:#34d399;margin-bottom:4px">✓ Output delivered via WhatsApp Business API</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:12px">Grounded in retrieved context · Policy-accurate · Personalised to traveller segment</div>
+      <div class="out-msg">"Dear Vaishnavi, I've taken care of everything so you don't have to. Your 6E-204 has been delayed 4 hours — I've rebooked you on the 23:45 BOM→LHR with your preferred aisle seat confirmed. Primus Lounge at Chennai T1 is arranged — quiet, strong Wi-Fi, hot meals. Your Heathrow transfer has been rescheduled. As a Platinum member your full DGCA compensation is logged. Gate alert 90 minutes before new departure. Warm regards, JourneyMate"</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px">
+        <div style="background:rgba(255,255,255,.05);border-radius:6px;padding:10px;text-align:center">
+          <div style="font-size:16px;font-weight:600;color:#fff;font-family:'Inter',sans-serif">&lt;8s</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);margin-top:2px;text-transform:uppercase;letter-spacing:.4px">Trigger to delivery</div>
+        </div>
+        <div style="background:rgba(255,255,255,.05);border-radius:6px;padding:10px;text-align:center">
+          <div style="font-size:16px;font-weight:600;color:#fff;font-family:'Inter',sans-serif">3</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);margin-top:2px;text-transform:uppercase;letter-spacing:.4px">Sources retrieved</div>
+        </div>
+        <div style="background:rgba(255,255,255,.05);border-radius:6px;padding:10px;text-align:center">
+          <div style="font-size:16px;font-weight:600;color:#fff;font-family:'Inter',sans-serif">0</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);margin-top:2px;text-transform:uppercase;letter-spacing:.4px">Hallucinated facts</div>
+        </div>
+        <div style="background:rgba(255,255,255,.05);border-radius:6px;padding:10px;text-align:center">
+          <div style="font-size:16px;font-weight:600;color:#fff;font-family:'Inter',sans-serif">$0.001</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);margin-top:2px;text-transform:uppercase;letter-spacing:.4px">AI cost per message</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="sec">
+    <div class="sec-label">Full technology stack</div>
+    <div class="sec-title">Every tool in the pipeline</div>
+    <div class="tech-row">
+      <div class="tech-pill highlight">LangFlow</div>
+      <div class="tech-pill highlight">Pinecone</div>
+      <div class="tech-pill highlight">Claude Haiku 4.5</div>
+      <div class="tech-pill highlight">Claude Sonnet 4.6</div>
+      <div class="tech-pill">text-embedding-3-small</div>
+      <div class="tech-pill">OAG Flight API</div>
+      <div class="tech-pill">Amadeus Hotel API</div>
+      <div class="tech-pill">Priority Pass API</div>
+      <div class="tech-pill">Navitaire PNR API</div>
+      <div class="tech-pill">WhatsApp Business API</div>
+      <div class="tech-pill">DGCA policy corpus</div>
+      <div class="tech-pill">Cosine similarity search</div>
+      <div class="tech-pill">512-token chunking</div>
+      <div class="tech-pill">K-means segmentation</div>
+    </div>
+  </div>
+
+</div>
+<div style="text-align:center;padding:28px;font-size:11px;color:rgba(255,255,255,.2);font-family:'DM Mono',monospace">JourneyMate · ICAIPM GenAI PM Capstone · RAG Architecture · LangFlow + Pinecone + Claude</div>
+</div>
+
+</body>
+</html>
